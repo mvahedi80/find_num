@@ -1,0 +1,47 @@
+"""With this program you can find the digits in a txt file and store it in your Desktop in digits folder
+in digits txt and if that file existed exactly like windows when you create two new folders in a directory
+it will create say new folder (2) and so on"""
+from os.path import exists
+import os
+import re
+
+
+def find_digit(directory: str):
+    """With this function you can find the digits of a txt file, extract it and then store it in
+    desktop in digits folder in digits """
+    pattern = re.compile(r'\d')
+    if exists(directory) and '.txt' or '.rtf' in directory:
+        with open(directory, 'r') as file:
+            text = str(file.read())
+
+    digits = pattern.findall(text)
+    files = os.listdir("C:/users/m.m/Desktop")
+    folders = []
+
+    for folder in files:
+        if 'digits' in folder:
+            folders.append(folder)
+
+    print(folders)
+    last_folder = folders.pop()
+
+    try:
+        n_of_dir = pattern.search(last_folder).group()
+
+    except AttributeError:
+        n_of_dir = 1
+
+    else:
+        n_of_dir = int(n_of_dir)
+        n_of_dir += 1
+
+    try:
+        os.mkdir("C:/users/m.m/Desktop/digits")
+        with open("C:/users/m.m/Desktop/digits/digits.txt", 'w') as file:
+            file.write(''.join(digits))
+
+    except FileExistsError:
+        os.mkdir(f"C:/users/m.m/Desktop/digits({n_of_dir})")
+        with open(f"C:/users/m.m/Desktop/digits({n_of_dir})/digits.txt", 'w') as f:
+            f.write(''.join(digits))
+
